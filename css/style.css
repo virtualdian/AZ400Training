@@ -228,6 +228,21 @@ main { padding: 16px; max-width: 640px; margin: 0 auto; }
 .modal .en-naam { color: var(--text-muted); font-size: 0.82rem; font-style: italic; margin-bottom: 10px; }
 .modal ol { padding-left: 20px; color: var(--text-secondary); }
 .modal ol li { margin-bottom: 8px; }
+.gif-wrap {
+  background: #ffffff; /* de GIF's hebben een witte achtergrond */
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 12px 0;
+  min-height: 120px;
+}
+.oefening-gif {
+  display: block;
+  width: 100%;
+  max-height: 320px;
+  object-fit: contain;
+}
+
 .tip-blok {
   background: var(--accent-soft);
   border-left: 3px solid var(--accent);

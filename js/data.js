@@ -3,6 +3,11 @@
 // gietijzeren schijven, 2 verstelbare dumbbells, fitnessmat en lichaamsgewicht.
 // De id's verwijzen naar de oorspronkelijke dataset; namen en instructies zijn vertaald naar het Nederlands.
 
+// Demonstratie-GIF's worden rechtstreeks van de ExerciseDB-CDN geladen (niet in deze repo
+// opgeslagen vanwege de eigendomsclaims die de dataset-repo vermeldt). Elke bekeken GIF
+// wordt door de service worker gecachet en is daarna ook offline beschikbaar.
+const GIF_BASIS = "https://static.exercisedb.dev/media/";
+
 const MATERIAAL = {
   stang: "Halterstang + schijven",
   dumbbells: "Dumbbells",
@@ -17,7 +22,7 @@ const GROEPEN = ["Borst", "Rug", "Schouders", "Biceps", "Triceps", "Benen & bill
 const OEFENINGEN = [
   // ============ BORST ============
   {
-    id: "0025", naam: "Bankdrukken", en: "barbell bench press", groep: "Borst",
+    id: "0025", media: "EIeI8Vf", naam: "Bankdrukken", en: "barbell bench press", groep: "Borst",
     doelspier: "Borst", secundair: ["Triceps", "Voorste schouders"], materiaal: ["stang", "bank", "rek"],
     instructies: [
       "Ga op de vlakke bank liggen met je ogen recht onder de stang en zet je voeten stevig op de grond.",
@@ -28,7 +33,7 @@ const OEFENINGEN = [
     tip: "Knijp je schouderbladen samen en houd een lichte holling in je onderrug. Zet de vangpennen van het rek op de juiste hoogte als je alleen traint.",
   },
   {
-    id: "0047", naam: "Incline bankdrukken", en: "barbell incline bench press", groep: "Borst",
+    id: "0047", media: "3TZduzM", naam: "Incline bankdrukken", en: "barbell incline bench press", groep: "Borst",
     doelspier: "Bovenkant borst", secundair: ["Triceps", "Voorste schouders"], materiaal: ["stang", "bank", "rek"],
     instructies: [
       "Zet de rugleuning van de bank schuin omhoog op 30–45 graden.",
@@ -39,7 +44,7 @@ const OEFENINGEN = [
     tip: "Hoe steiler de bank, hoe meer de schouders het overnemen — 30 graden is ideaal voor de bovenborst.",
   },
   {
-    id: "0289", naam: "Dumbbell bankdrukken", en: "dumbbell bench press", groep: "Borst",
+    id: "0289", media: "SpYC0Kp", naam: "Dumbbell bankdrukken", en: "dumbbell bench press", groep: "Borst",
     doelspier: "Borst", secundair: ["Triceps", "Voorste schouders"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Ga op de vlakke bank liggen met in elke hand een dumbbell op borsthoogte, handpalmen naar voren.",
@@ -50,7 +55,7 @@ const OEFENINGEN = [
     tip: "Dumbbells geven een grotere bewegingsuitslag dan de stang — perfect als aanvulling op bankdrukken.",
   },
   {
-    id: "0314", naam: "Incline dumbbell press", en: "dumbbell incline bench press", groep: "Borst",
+    id: "0314", media: "ns0SIbU", naam: "Incline dumbbell press", en: "dumbbell incline bench press", groep: "Borst",
     doelspier: "Bovenkant borst", secundair: ["Triceps", "Voorste schouders"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Zet de bank op 30–45 graden en ga zitten met een dumbbell in elke hand op schouderhoogte.",
@@ -60,7 +65,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0308", naam: "Dumbbell fly", en: "dumbbell fly", groep: "Borst",
+    id: "0308", media: "yz9nUhF", naam: "Dumbbell fly", en: "dumbbell fly", groep: "Borst",
     doelspier: "Borst", secundair: ["Voorste schouders"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Ga op de vlakke bank liggen met de dumbbells gestrekt boven je borst, handpalmen naar elkaar.",
@@ -71,7 +76,7 @@ const OEFENINGEN = [
     tip: "Gebruik minder gewicht dan bij drukken — het is een isolatieoefening. Houd de elleboogshoek constant.",
   },
   {
-    id: "0319", naam: "Incline dumbbell fly", en: "dumbbell incline fly", groep: "Borst",
+    id: "0319", media: "ESOd5Pl", naam: "Incline dumbbell fly", en: "dumbbell incline fly", groep: "Borst",
     doelspier: "Bovenkant borst", secundair: ["Voorste schouders"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Zet de bank op 30–45 graden en houd de dumbbells gestrekt boven je borst, handpalmen naar elkaar.",
@@ -81,7 +86,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0375", naam: "Dumbbell pullover", en: "dumbbell pullover", groep: "Borst",
+    id: "0375", media: "9XjtHvS", naam: "Dumbbell pullover", en: "dumbbell pullover", groep: "Borst",
     doelspier: "Borst", secundair: ["Brede rugspier", "Triceps"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Ga dwars of in de lengte op de bank liggen en houd één dumbbell met beide handen gestrekt boven je borst.",
@@ -91,7 +96,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0662", naam: "Push-up", en: "push-up", groep: "Borst",
+    id: "0662", media: "I4hDWkc", naam: "Push-up", en: "push-up", groep: "Borst",
     doelspier: "Borst", secundair: ["Triceps", "Schouders", "Core"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Neem een plankpositie aan met je handen iets breder dan schouderbreedte.",
@@ -102,7 +107,7 @@ const OEFENINGEN = [
     tip: "Te zwaar? Doe ze op je knieën of met je handen op de bank (incline push-up).",
   },
   {
-    id: "0493", naam: "Incline push-up", en: "incline push-up", groep: "Borst",
+    id: "0493", media: "B1EVP9F", naam: "Incline push-up", en: "incline push-up", groep: "Borst",
     doelspier: "Borst (onderkant)", secundair: ["Triceps", "Schouders"], materiaal: ["lichaam", "bank"],
     instructies: [
       "Plaats je handen op de rand van de bank, iets breder dan schouderbreedte.",
@@ -113,7 +118,7 @@ const OEFENINGEN = [
     tip: "Makkelijker dan een gewone push-up — ideaal om mee te beginnen of als afsluiter.",
   },
   {
-    id: "0279", naam: "Decline push-up", en: "decline push-up", groep: "Borst",
+    id: "0279", media: "i5cEhka", naam: "Decline push-up", en: "decline push-up", groep: "Borst",
     doelspier: "Bovenkant borst", secundair: ["Triceps", "Schouders"], materiaal: ["lichaam", "bank"],
     instructies: [
       "Leg je voeten op de bank en plaats je handen op de grond, iets breder dan schouderbreedte.",
@@ -124,7 +129,7 @@ const OEFENINGEN = [
     tip: "Zwaarder dan een gewone push-up en meer nadruk op de bovenborst.",
   },
   {
-    id: "1311", naam: "Brede push-up", en: "wide hand push up", groep: "Borst",
+    id: "1311", media: "JmMVpR3", naam: "Brede push-up", en: "wide hand push up", groep: "Borst",
     doelspier: "Borst", secundair: ["Schouders", "Triceps"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Neem een plankpositie aan met je handen ruim breder dan schouderbreedte.",
@@ -135,7 +140,7 @@ const OEFENINGEN = [
 
   // ============ RUG ============
   {
-    id: "0032", naam: "Deadlift", en: "barbell deadlift", groep: "Rug",
+    id: "0032", media: "ila4NZS", naam: "Deadlift", en: "barbell deadlift", groep: "Rug",
     doelspier: "Billen & onderrug", secundair: ["Hamstrings", "Bovenrug", "Grip"], materiaal: ["stang", "mat"],
     instructies: [
       "Sta met je middenvoet onder de stang, voeten op heupbreedte.",
@@ -146,7 +151,7 @@ const OEFENINGEN = [
     tip: "Houd de stang dicht tegen je lichaam en je rug de hele beweging recht. Dé oefening voor totale kracht.",
   },
   {
-    id: "0117", naam: "Sumo deadlift", en: "barbell sumo deadlift", groep: "Rug",
+    id: "0117", media: "KgI0tqW", naam: "Sumo deadlift", en: "barbell sumo deadlift", groep: "Rug",
     doelspier: "Billen", secundair: ["Binnenkant dijen", "Hamstrings", "Rug"], materiaal: ["stang"],
     instructies: [
       "Sta breed met je tenen licht naar buiten en de stang boven je middenvoet.",
@@ -157,7 +162,7 @@ const OEFENINGEN = [
     tip: "Door de brede stand belast je onderrug minder — fijne variant als deadliften zwaar op je rug voelt.",
   },
   {
-    id: "0074", naam: "Rack pull", en: "barbell rack pull", groep: "Rug",
+    id: "0074", media: "za9Ni4z", naam: "Rack pull", en: "barbell rack pull", groep: "Rug",
     doelspier: "Bovenrug & billen", secundair: ["Trapezius", "Grip"], materiaal: ["stang", "rek"],
     instructies: [
       "Leg de stang op de vangpennen van het rek, rond kniehoogte.",
@@ -168,7 +173,7 @@ const OEFENINGEN = [
     tip: "Doordat de beweging korter is kun je zwaarder laden dan bij een volledige deadlift.",
   },
   {
-    id: "0027", naam: "Barbell row (voorovergebogen)", en: "barbell bent over row", groep: "Rug",
+    id: "0027", media: "eZyBC3j", naam: "Barbell row (voorovergebogen)", en: "barbell bent over row", groep: "Rug",
     doelspier: "Bovenrug", secundair: ["Brede rugspier", "Biceps", "Onderrug"], materiaal: ["stang"],
     instructies: [
       "Pak de stang op schouderbreedte en buig voorover tot je romp bijna horizontaal is, knieën licht gebogen.",
@@ -179,7 +184,7 @@ const OEFENINGEN = [
     tip: "Houd je rug recht en gebruik geen zwaai — kracht komt uit je rug, niet uit je heupen.",
   },
   {
-    id: "3017", naam: "Pendlay row", en: "barbell pendlay row", groep: "Rug",
+    id: "3017", media: "r0z6xzQ", naam: "Pendlay row", en: "barbell pendlay row", groep: "Rug",
     doelspier: "Bovenrug", secundair: ["Brede rugspier", "Biceps"], materiaal: ["stang"],
     instructies: [
       "Laat de stang tussen elke herhaling volledig op de grond rusten, romp horizontaal.",
@@ -190,7 +195,7 @@ const OEFENINGEN = [
     tip: "Elke herhaling vanuit stilstand — perfect voor pure trekkracht.",
   },
   {
-    id: "0292", naam: "Eénarmige dumbbell row", en: "dumbbell one arm bent-over row", groep: "Rug",
+    id: "0292", media: "C0MA9bC", naam: "Eénarmige dumbbell row", en: "dumbbell one arm bent-over row", groep: "Rug",
     doelspier: "Brede rugspier", secundair: ["Bovenrug", "Biceps"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Zet je linkerknie en linkerhand op de bank, rug horizontaal en recht.",
@@ -200,7 +205,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0293", naam: "Dumbbell row (voorovergebogen)", en: "dumbbell bent over row", groep: "Rug",
+    id: "0293", media: "BJ0Hz5L", naam: "Dumbbell row (voorovergebogen)", en: "dumbbell bent over row", groep: "Rug",
     doelspier: "Bovenrug", secundair: ["Brede rugspier", "Biceps"], materiaal: ["dumbbells"],
     instructies: [
       "Sta met een dumbbell in elke hand en buig voorover met een rechte rug.",
@@ -210,7 +215,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0327", naam: "Chest-supported dumbbell row", en: "dumbbell incline row", groep: "Rug",
+    id: "0327", media: "7vG5o25", naam: "Chest-supported dumbbell row", en: "dumbbell incline row", groep: "Rug",
     doelspier: "Bovenrug", secundair: ["Brede rugspier", "Achterste schouders"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Zet de bank schuin op ±45 graden en ga er met je borst voorover op liggen.",
@@ -221,7 +226,7 @@ const OEFENINGEN = [
     tip: "Doordat je borst ondersteund is, kan je onderrug niet valsspelen — pure rugtraining.",
   },
   {
-    id: "0499", naam: "Inverted row (aan de stang)", en: "inverted row", groep: "Rug",
+    id: "0499", media: "bZGHsAZ", naam: "Inverted row (aan de stang)", en: "inverted row", groep: "Rug",
     doelspier: "Bovenrug", secundair: ["Biceps", "Core"], materiaal: ["stang", "rek", "lichaam"],
     instructies: [
       "Leg de stang stevig op de standaards van het rek, ongeveer op heuphoogte.",
@@ -232,7 +237,7 @@ const OEFENINGEN = [
     tip: "Hoe horizontaler je hangt, hoe zwaarder. Controleer dat de stang niet kan wegrollen.",
   },
   {
-    id: "0073", naam: "Barbell pullover", en: "barbell pullover", groep: "Rug",
+    id: "0073", media: "i6LWjok", naam: "Barbell pullover", en: "barbell pullover", groep: "Rug",
     doelspier: "Brede rugspier", secundair: ["Borst", "Triceps"], materiaal: ["stang", "bank"],
     instructies: [
       "Ga op de bank liggen en houd de stang met een smalle greep gestrekt boven je borst.",
@@ -242,7 +247,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0095", naam: "Barbell shrug", en: "barbell shrug", groep: "Rug",
+    id: "0095", media: "dG7tG5y", naam: "Barbell shrug", en: "barbell shrug", groep: "Rug",
     doelspier: "Trapezius (nek/schouders)", secundair: ["Grip"], materiaal: ["stang"],
     instructies: [
       "Sta rechtop met de stang aan gestrekte armen voor je lichaam.",
@@ -252,7 +257,7 @@ const OEFENINGEN = [
     tip: "Armen blijven gestrekt — de beweging komt puur uit je schouders.",
   },
   {
-    id: "0406", naam: "Dumbbell shrug", en: "dumbbell shrug", groep: "Rug",
+    id: "0406", media: "NJzBsGJ", naam: "Dumbbell shrug", en: "dumbbell shrug", groep: "Rug",
     doelspier: "Trapezius (nek/schouders)", secundair: ["Grip"], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met een dumbbell in elke hand naast je lichaam.",
@@ -263,7 +268,7 @@ const OEFENINGEN = [
 
   // ============ SCHOUDERS ============
   {
-    id: "1456", naam: "Military press (staand)", en: "barbell standing close grip military press", groep: "Schouders",
+    id: "1456", media: "wdRZISl", naam: "Military press (staand)", en: "barbell standing close grip military press", groep: "Schouders",
     doelspier: "Schouders", secundair: ["Triceps", "Core", "Bovenborst"], materiaal: ["stang", "rek"],
     instructies: [
       "Pak de stang uit het rek op schouderhoogte, greep net buiten schouderbreedte.",
@@ -274,7 +279,7 @@ const OEFENINGEN = [
     tip: "Span je billen en buik aan zodat je onderrug niet doorbuigt.",
   },
   {
-    id: "0091", naam: "Overhead press (zittend)", en: "barbell seated overhead press", groep: "Schouders",
+    id: "0091", media: "kTbSH9h", naam: "Overhead press (zittend)", en: "barbell seated overhead press", groep: "Schouders",
     doelspier: "Schouders", secundair: ["Triceps"], materiaal: ["stang", "bank", "rek"],
     instructies: [
       "Zet de rugleuning van de bank rechtop en ga zitten met de stang op schouderhoogte.",
@@ -284,7 +289,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0426", naam: "Dumbbell overhead press (staand)", en: "dumbbell standing overhead press", groep: "Schouders",
+    id: "0426", media: "A6wtbuL", naam: "Dumbbell overhead press (staand)", en: "dumbbell standing overhead press", groep: "Schouders",
     doelspier: "Schouders", secundair: ["Triceps", "Core"], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met een dumbbell in elke hand op schouderhoogte, handpalmen naar voren.",
@@ -293,7 +298,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0405", naam: "Dumbbell shoulder press (zittend)", en: "dumbbell seated shoulder press", groep: "Schouders",
+    id: "0405", media: "znQUdHY", naam: "Dumbbell shoulder press (zittend)", en: "dumbbell seated shoulder press", groep: "Schouders",
     doelspier: "Schouders", secundair: ["Triceps"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Zet de rugleuning rechtop en ga zitten met de dumbbells op schouderhoogte.",
@@ -303,7 +308,7 @@ const OEFENINGEN = [
     tip: "De rugleuning geeft steun waardoor je iets zwaarder kunt drukken dan staand.",
   },
   {
-    id: "2137", naam: "Arnold press", en: "dumbbell arnold press", groep: "Schouders",
+    id: "2137", media: "Xy4jlWA", naam: "Arnold press", en: "dumbbell arnold press", groep: "Schouders",
     doelspier: "Schouders (alle koppen)", secundair: ["Triceps"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Zit rechtop met de dumbbells voor je schouders, handpalmen naar je toe.",
@@ -313,7 +318,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "1700", naam: "Dumbbell push press", en: "dumbbell push press", groep: "Schouders",
+    id: "1700", media: "FS63wTN", naam: "Dumbbell push press", en: "dumbbell push press", groep: "Schouders",
     doelspier: "Schouders", secundair: ["Benen", "Triceps", "Core"], materiaal: ["dumbbells"],
     instructies: [
       "Sta met de dumbbells op schouderhoogte.",
@@ -324,7 +329,7 @@ const OEFENINGEN = [
     tip: "Door de beenzet kun je zwaarder drukken — mooie krachtoefening voor het hele lichaam.",
   },
   {
-    id: "0334", naam: "Zijwaartse raise", en: "dumbbell lateral raise", groep: "Schouders",
+    id: "0334", media: "DsgkuIt", naam: "Zijwaartse raise", en: "dumbbell lateral raise", groep: "Schouders",
     doelspier: "Zijkant schouders", secundair: [], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met een dumbbell in elke hand naast je lichaam.",
@@ -334,7 +339,7 @@ const OEFENINGEN = [
     tip: "Licht gewicht, strakke uitvoering — niet zwaaien. Dit maakt je schouders breder.",
   },
   {
-    id: "0310", naam: "Front raise", en: "dumbbell front raise", groep: "Schouders",
+    id: "0310", media: "3eGE2JC", naam: "Front raise", en: "dumbbell front raise", groep: "Schouders",
     doelspier: "Voorste schouders", secundair: [], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met de dumbbells voor je bovenbenen, handpalmen naar je lichaam.",
@@ -343,7 +348,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0380", naam: "Bent-over rear raise", en: "dumbbell rear lateral raise", groep: "Schouders",
+    id: "0380", media: "v1qBec9", naam: "Bent-over rear raise", en: "dumbbell rear lateral raise", groep: "Schouders",
     doelspier: "Achterste schouders", secundair: ["Bovenrug"], materiaal: ["dumbbells"],
     instructies: [
       "Buig voorover met een rechte rug tot je romp bijna horizontaal is.",
@@ -354,7 +359,7 @@ const OEFENINGEN = [
     tip: "Belangrijk voor gezonde schouders en een goede houding — vaak vergeten spiergroep.",
   },
   {
-    id: "0383", naam: "Reverse fly", en: "dumbbell reverse fly", groep: "Schouders",
+    id: "0383", media: "EAs3xL9", naam: "Reverse fly", en: "dumbbell reverse fly", groep: "Schouders",
     doelspier: "Achterste schouders", secundair: ["Bovenrug"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Ga met je borst voorover op de schuine bank liggen, dumbbells hangend onder je.",
@@ -363,7 +368,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0120", naam: "Upright row", en: "barbell upright row", groep: "Schouders",
+    id: "0120", media: "UDlhcO8", naam: "Upright row", en: "barbell upright row", groep: "Schouders",
     doelspier: "Schouders & trapezius", secundair: ["Biceps"], materiaal: ["stang"],
     instructies: [
       "Sta rechtop met de stang aan gestrekte armen voor je lichaam, greep op schouderbreedte.",
@@ -375,7 +380,7 @@ const OEFENINGEN = [
 
   // ============ BICEPS ============
   {
-    id: "0031", naam: "Barbell curl", en: "barbell curl", groep: "Biceps",
+    id: "0031", media: "25GPyDY", naam: "Barbell curl", en: "barbell curl", groep: "Biceps",
     doelspier: "Biceps", secundair: ["Onderarmen"], materiaal: ["stang"],
     instructies: [
       "Sta rechtop met de stang aan gestrekte armen, onderhandse greep op schouderbreedte.",
@@ -385,7 +390,7 @@ const OEFENINGEN = [
     tip: "Houd je ellebogen tegen je zij en gebruik geen zwaai vanuit je rug.",
   },
   {
-    id: "0080", naam: "Reverse curl", en: "barbell reverse curl", groep: "Biceps",
+    id: "0080", media: "xNrS20v", naam: "Reverse curl", en: "barbell reverse curl", groep: "Biceps",
     doelspier: "Onderarmen & biceps", secundair: [], materiaal: ["stang"],
     instructies: [
       "Pak de stang met een bovenhandse greep op schouderbreedte.",
@@ -394,7 +399,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0294", naam: "Dumbbell curl", en: "dumbbell biceps curl", groep: "Biceps",
+    id: "0294", media: "NbVPDMW", naam: "Dumbbell curl", en: "dumbbell biceps curl", groep: "Biceps",
     doelspier: "Biceps", secundair: ["Onderarmen"], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met een dumbbell in elke hand, handpalmen naar voren.",
@@ -403,7 +408,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0285", naam: "Alternerende dumbbell curl", en: "dumbbell alternate biceps curl", groep: "Biceps",
+    id: "0285", media: "BU15nH4", naam: "Alternerende dumbbell curl", en: "dumbbell alternate biceps curl", groep: "Biceps",
     doelspier: "Biceps", secundair: ["Onderarmen"], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met een dumbbell in elke hand naast je lichaam.",
@@ -412,7 +417,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0313", naam: "Hammer curl", en: "dumbbell hammer curl", groep: "Biceps",
+    id: "0313", media: "slDvUAU", naam: "Hammer curl", en: "dumbbell hammer curl", groep: "Biceps",
     doelspier: "Biceps & onderarmen", secundair: [], materiaal: ["dumbbells"],
     instructies: [
       "Houd de dumbbells naast je lichaam met de handpalmen naar elkaar toe (hamergreep).",
@@ -421,7 +426,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0297", naam: "Concentration curl", en: "dumbbell concentration curl", groep: "Biceps",
+    id: "0297", media: "gvsWLQw", naam: "Concentration curl", en: "dumbbell concentration curl", groep: "Biceps",
     doelspier: "Biceps", secundair: [], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Ga op de bank zitten en steun je elleboog tegen de binnenkant van je dij.",
@@ -430,7 +435,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0318", naam: "Incline dumbbell curl", en: "dumbbell incline curl", groep: "Biceps",
+    id: "0318", media: "ae9UoXQ", naam: "Incline dumbbell curl", en: "dumbbell incline curl", groep: "Biceps",
     doelspier: "Biceps (lange kop)", secundair: [], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Ga op de schuine bank liggen (±45 graden) met de dumbbells recht naar beneden hangend.",
@@ -439,7 +444,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0439", naam: "Zottman curl", en: "dumbbell zottman curl", groep: "Biceps",
+    id: "0439", media: "kXaIn5A", naam: "Zottman curl", en: "dumbbell zottman curl", groep: "Biceps",
     doelspier: "Biceps & onderarmen", secundair: [], materiaal: ["dumbbells"],
     instructies: [
       "Krul de dumbbells omhoog met de handpalmen naar boven.",
@@ -450,7 +455,7 @@ const OEFENINGEN = [
 
   // ============ TRICEPS ============
   {
-    id: "0030", naam: "Bankdrukken met smalle greep", en: "barbell close-grip bench press", groep: "Triceps",
+    id: "0030", media: "J6Dx1Mu", naam: "Bankdrukken met smalle greep", en: "barbell close-grip bench press", groep: "Triceps",
     doelspier: "Triceps", secundair: ["Borst", "Voorste schouders"], materiaal: ["stang", "bank", "rek"],
     instructies: [
       "Ga op de vlakke bank liggen en pak de stang op schouderbreedte of net iets smaller.",
@@ -460,7 +465,7 @@ const OEFENINGEN = [
     tip: "Dé zware basisoefening voor triceps. Niet extreem smal vastpakken — schouderbreedte is genoeg.",
   },
   {
-    id: "0060", naam: "Skull crusher", en: "barbell lying triceps extension skull crusher", groep: "Triceps",
+    id: "0060", media: "h8LFzo9", naam: "Skull crusher", en: "barbell lying triceps extension skull crusher", groep: "Triceps",
     doelspier: "Triceps", secundair: [], materiaal: ["stang", "bank"],
     instructies: [
       "Ga op de bank liggen met de stang aan gestrekte armen boven je borst, smalle greep.",
@@ -469,7 +474,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0092", naam: "Overhead triceps extension (barbell)", en: "barbell seated overhead triceps extension", groep: "Triceps",
+    id: "0092", media: "5uFK1xr", naam: "Overhead triceps extension (barbell)", en: "barbell seated overhead triceps extension", groep: "Triceps",
     doelspier: "Triceps", secundair: [], materiaal: ["stang", "bank"],
     instructies: [
       "Ga zitten en houd de stang met een smalle greep gestrekt boven je hoofd.",
@@ -478,7 +483,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0351", naam: "Liggende dumbbell extension", en: "dumbbell lying triceps extension", groep: "Triceps",
+    id: "0351", media: "mpKZGWz", naam: "Liggende dumbbell extension", en: "dumbbell lying triceps extension", groep: "Triceps",
     doelspier: "Triceps", secundair: [], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Ga op de bank liggen met in elke hand een dumbbell gestrekt boven je borst.",
@@ -487,7 +492,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "2188", naam: "Zittende dumbbell extension", en: "dumbbell seated triceps extension", groep: "Triceps",
+    id: "2188", media: "kont8Ut", naam: "Zittende dumbbell extension", en: "dumbbell seated triceps extension", groep: "Triceps",
     doelspier: "Triceps", secundair: [], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Ga zitten en houd één dumbbell met beide handen achter je hoofd, ellebogen omhoog.",
@@ -496,7 +501,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0333", naam: "Dumbbell kickback", en: "dumbbell kickback", groep: "Triceps",
+    id: "0333", media: "W6PxUkg", naam: "Dumbbell kickback", en: "dumbbell kickback", groep: "Triceps",
     doelspier: "Triceps", secundair: [], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Steun met één hand en knie op de bank, rug horizontaal.",
@@ -506,7 +511,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0129", naam: "Bench dip", en: "bench dip (knees bent)", groep: "Triceps",
+    id: "0129", media: "RrLske5", naam: "Bench dip", en: "bench dip (knees bent)", groep: "Triceps",
     doelspier: "Triceps", secundair: ["Borst", "Schouders"], materiaal: ["lichaam", "bank"],
     instructies: [
       "Zet je handen op de rand van de bank, vingers naar voren, voeten op de grond.",
@@ -516,7 +521,7 @@ const OEFENINGEN = [
     tip: "Zwaarder maken? Strek je benen of leg een schijf op je schoot.",
   },
   {
-    id: "0259", naam: "Close-grip push-up", en: "close-grip push-up", groep: "Triceps",
+    id: "0259", media: "x6KpKpq", naam: "Close-grip push-up", en: "close-grip push-up", groep: "Triceps",
     doelspier: "Triceps", secundair: ["Borst", "Core"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Neem een plankpositie aan met je handen op schouderbreedte of smaller.",
@@ -525,7 +530,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0283", naam: "Diamond push-up", en: "diamond push-up", groep: "Triceps",
+    id: "0283", media: "soIB2rj", naam: "Diamond push-up", en: "diamond push-up", groep: "Triceps",
     doelspier: "Triceps", secundair: ["Borst"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Plaats je handen onder je borst met duimen en wijsvingers tegen elkaar in een ruitvorm.",
@@ -536,7 +541,7 @@ const OEFENINGEN = [
 
   // ============ BENEN & BILLEN ============
   {
-    id: "1436", naam: "Squat (barbell)", en: "barbell high bar squat", groep: "Benen & billen",
+    id: "1436", media: "Gnfo4FM", naam: "Squat (barbell)", en: "barbell high bar squat", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Core", "Onderrug"], materiaal: ["stang", "rek"],
     instructies: [
       "Zet de stang op de standaards op schouderhoogte en stap eronder, stang op je trapezius.",
@@ -547,7 +552,7 @@ const OEFENINGEN = [
     tip: "Dé basisoefening voor beenkracht. Knieën volgen de richting van je tenen; hielen blijven op de grond.",
   },
   {
-    id: "0042", naam: "Front squat", en: "barbell front squat", groep: "Benen & billen",
+    id: "0042", media: "zG0zs85", naam: "Front squat", en: "barbell front squat", groep: "Benen & billen",
     doelspier: "Bovenbenen (voorkant)", secundair: ["Billen", "Core"], materiaal: ["stang", "rek"],
     instructies: [
       "Leg de stang op je voorste schouders met je ellebogen hoog naar voren.",
@@ -558,7 +563,7 @@ const OEFENINGEN = [
     tip: "Meer nadruk op je quadriceps en core dan de gewone squat; je romp blijft rechter.",
   },
   {
-    id: "0054", naam: "Barbell lunge", en: "barbell lunge", groep: "Benen & billen",
+    id: "0054", media: "t8iSghb", naam: "Barbell lunge", en: "barbell lunge", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Core"], materiaal: ["stang", "rek"],
     instructies: [
       "Zet de stang op je trapezius zoals bij een squat.",
@@ -568,7 +573,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0099", naam: "Bulgaarse split squat (barbell)", en: "barbell single leg split squat", groep: "Benen & billen",
+    id: "0099", media: "gGNQmVt", naam: "Bulgaarse split squat (barbell)", en: "barbell single leg split squat", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Core", "Balans"], materiaal: ["stang", "bank", "rek"],
     instructies: [
       "Leg de stang op je rug en plaats de wreef van je achterste voet op de bank.",
@@ -578,7 +583,7 @@ const OEFENINGEN = [
     tip: "Brute oefening voor benen en billen — begin licht, de balans is het lastigst.",
   },
   {
-    id: "0114", naam: "Barbell step-up", en: "barbell step-up", groep: "Benen & billen",
+    id: "0114", media: "Kxquu2E", naam: "Barbell step-up", en: "barbell step-up", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Balans"], materiaal: ["stang", "bank"],
     instructies: [
       "Leg de stang op je rug en ga voor de bank (of een stevige verhoging) staan.",
@@ -587,7 +592,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0085", naam: "Romanian deadlift", en: "barbell romanian deadlift", groep: "Benen & billen",
+    id: "0085", media: "wQ2c4XD", naam: "Romanian deadlift", en: "barbell romanian deadlift", groep: "Benen & billen",
     doelspier: "Hamstrings & billen", secundair: ["Onderrug"], materiaal: ["stang"],
     instructies: [
       "Sta rechtop met de stang aan gestrekte armen voor je bovenbenen.",
@@ -598,7 +603,7 @@ const OEFENINGEN = [
     tip: "Het is een heupbeweging, geen squat — de stang blijft dicht tegen je benen.",
   },
   {
-    id: "0044", naam: "Good morning", en: "barbell good morning", groep: "Benen & billen",
+    id: "0044", media: "XlZ4lAC", naam: "Good morning", en: "barbell good morning", groep: "Benen & billen",
     doelspier: "Hamstrings & onderrug", secundair: ["Billen"], materiaal: ["stang", "rek"],
     instructies: [
       "Leg de stang op je trapezius zoals bij een squat, voeten op heupbreedte.",
@@ -609,7 +614,7 @@ const OEFENINGEN = [
     tip: "Begin licht — techniek gaat hier vóór gewicht.",
   },
   {
-    id: "1409", naam: "Hip thrust / glute bridge (barbell)", en: "barbell glute bridge", groep: "Benen & billen",
+    id: "1409", media: "qKBpF7I", naam: "Hip thrust / glute bridge (barbell)", en: "barbell glute bridge", groep: "Benen & billen",
     doelspier: "Billen", secundair: ["Hamstrings", "Core"], materiaal: ["stang", "bank", "mat"],
     instructies: [
       "Zit op de grond met je bovenrug tegen de bank en rol de stang over je heupen.",
@@ -620,7 +625,7 @@ const OEFENINGEN = [
     tip: "Leg een handdoek of mat om de stang voor comfort op je heupen.",
   },
   {
-    id: "1760", naam: "Goblet squat", en: "dumbbell goblet squat", groep: "Benen & billen",
+    id: "1760", media: "yn8yg1r", naam: "Goblet squat", en: "dumbbell goblet squat", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Core"], materiaal: ["dumbbells"],
     instructies: [
       "Houd één dumbbell verticaal met beide handen tegen je borst.",
@@ -630,7 +635,7 @@ const OEFENINGEN = [
     tip: "Ideaal om squat-techniek te oefenen of als warming-up voor de barbell squat.",
   },
   {
-    id: "0336", naam: "Dumbbell lunge", en: "dumbbell lunge", groep: "Benen & billen",
+    id: "0336", media: "RRWFUcw", naam: "Dumbbell lunge", en: "dumbbell lunge", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Balans"], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met een dumbbell in elke hand naast je lichaam.",
@@ -639,7 +644,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "1460", naam: "Walking lunge", en: "walking lunge", groep: "Benen & billen",
+    id: "1460", media: "IZVHb27", naam: "Walking lunge", en: "walking lunge", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Balans", "Core"], materiaal: ["lichaam"],
     instructies: [
       "Doe een grote stap naar voren en zak tot je achterste knie bijna de grond raakt.",
@@ -649,7 +654,7 @@ const OEFENINGEN = [
     tip: "Zwaarder maken? Pak de dumbbells erbij.",
   },
   {
-    id: "0410", naam: "Bulgaarse split squat (dumbbell)", en: "dumbbell single leg split squat", groep: "Benen & billen",
+    id: "0410", media: "qx4fgX7", naam: "Bulgaarse split squat (dumbbell)", en: "dumbbell single leg split squat", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Balans", "Core"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Houd een dumbbell in elke hand en leg de wreef van je achterste voet op de bank.",
@@ -659,7 +664,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0431", naam: "Dumbbell step-up", en: "dumbbell step-up", groep: "Benen & billen",
+    id: "0431", media: "aXtJhlg", naam: "Dumbbell step-up", en: "dumbbell step-up", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Balans"], materiaal: ["dumbbells", "bank"],
     instructies: [
       "Houd een dumbbell in elke hand en ga voor de bank staan.",
@@ -668,7 +673,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "1459", naam: "Romanian deadlift (dumbbell)", en: "dumbbell romanian deadlift", groep: "Benen & billen",
+    id: "1459", media: "rR0LJzx", naam: "Romanian deadlift (dumbbell)", en: "dumbbell romanian deadlift", groep: "Benen & billen",
     doelspier: "Hamstrings & billen", secundair: ["Onderrug"], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met de dumbbells voor je bovenbenen.",
@@ -678,7 +683,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0514", naam: "Jump squat", en: "jump squat", groep: "Benen & billen",
+    id: "0514", media: "LIlE5Tn", naam: "Jump squat", en: "jump squat", groep: "Benen & billen",
     doelspier: "Bovenbenen & billen", secundair: ["Kuiten", "Explosiviteit"], materiaal: ["lichaam"],
     instructies: [
       "Zak door je knieën tot een squatpositie.",
@@ -687,7 +692,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "1372", naam: "Staande kuit-raise (barbell)", en: "barbell standing calf raise", groep: "Benen & billen",
+    id: "1372", media: "8ozhUIZ", naam: "Staande kuit-raise (barbell)", en: "barbell standing calf raise", groep: "Benen & billen",
     doelspier: "Kuiten", secundair: [], materiaal: ["stang", "rek"],
     instructies: [
       "Leg de stang op je rug zoals bij een squat.",
@@ -697,7 +702,7 @@ const OEFENINGEN = [
     tip: "Extra bewegingsuitslag? Zet je voorvoeten op een schijf of drempel.",
   },
   {
-    id: "0417", naam: "Staande kuit-raise (dumbbell)", en: "dumbbell standing calf raise", groep: "Benen & billen",
+    id: "0417", media: "dPmaUaU", naam: "Staande kuit-raise (dumbbell)", en: "dumbbell standing calf raise", groep: "Benen & billen",
     doelspier: "Kuiten", secundair: [], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met een dumbbell in elke hand naast je lichaam.",
@@ -708,7 +713,7 @@ const OEFENINGEN = [
 
   // ============ CORE ============
   {
-    id: "0274", naam: "Crunch", en: "crunch floor", groep: "Core",
+    id: "0274", media: "TFqbd8t", naam: "Crunch", en: "crunch floor", groep: "Core",
     doelspier: "Buikspieren", secundair: [], materiaal: ["lichaam", "mat"],
     instructies: [
       "Ga op je rug liggen met gebogen knieën en je voeten plat op de grond.",
@@ -718,7 +723,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0735", naam: "Sit-up", en: "sit-up v. 2", groep: "Core",
+    id: "0735", media: "Bn6TXyO", naam: "Sit-up", en: "sit-up v. 2", groep: "Core",
     doelspier: "Buikspieren", secundair: ["Heupbuigers"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Ga op je rug liggen met gebogen knieën.",
@@ -727,7 +732,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0872", naam: "Reverse crunch", en: "reverse crunch", groep: "Core",
+    id: "0872", media: "nCU1Ekp", naam: "Reverse crunch", en: "reverse crunch", groep: "Core",
     doelspier: "Onderste buikspieren", secundair: [], materiaal: ["lichaam", "mat"],
     instructies: [
       "Ga op je rug liggen met je benen omhoog en knieën 90 graden gebogen.",
@@ -736,7 +741,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0687", naam: "Russian twist", en: "russian twist", groep: "Core",
+    id: "0687", media: "XVDdcoj", naam: "Russian twist", en: "russian twist", groep: "Core",
     doelspier: "Schuine buikspieren", secundair: [], materiaal: ["lichaam", "mat"],
     instructies: [
       "Zit op de mat, leun licht achterover en til je voeten van de grond.",
@@ -746,7 +751,7 @@ const OEFENINGEN = [
     tip: "Zwaarder maken? Houd een schijf van 2,5 of 5 kg vast.",
   },
   {
-    id: "0276", naam: "Dead bug", en: "dead bug", groep: "Core",
+    id: "0276", media: "iny3m5y", naam: "Dead bug", en: "dead bug", groep: "Core",
     doelspier: "Diepe buikspieren", secundair: ["Onderrug"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Ga op je rug liggen met je armen recht omhoog en je knieën 90 graden gebogen boven je heupen.",
@@ -755,7 +760,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0630", naam: "Mountain climber", en: "mountain climber", groep: "Core",
+    id: "0630", media: "RJgzwny", naam: "Mountain climber", en: "mountain climber", groep: "Core",
     doelspier: "Core & conditie", secundair: ["Schouders", "Benen"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Neem een plankpositie aan op gestrekte armen.",
@@ -764,7 +769,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0620", naam: "Liggende beenheffing (op bank)", en: "lying leg raise flat bench", groep: "Core",
+    id: "0620", media: "WhuFnR7", naam: "Liggende beenheffing (op bank)", en: "lying leg raise flat bench", groep: "Core",
     doelspier: "Onderste buikspieren", secundair: ["Heupbuigers"], materiaal: ["lichaam", "bank"],
     instructies: [
       "Ga op je rug op de bank liggen en houd de bank naast je hoofd vast.",
@@ -773,7 +778,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0570", naam: "Leg pull-in (op bank)", en: "leg pull in flat bench", groep: "Core",
+    id: "0570", media: "OyoZ3Pu", naam: "Leg pull-in (op bank)", en: "leg pull in flat bench", groep: "Core",
     doelspier: "Onderste buikspieren", secundair: ["Heupbuigers"], materiaal: ["lichaam", "bank"],
     instructies: [
       "Zit op de rand van de bank en leun licht achterover, benen gestrekt naar voren.",
@@ -782,7 +787,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0705", naam: "Zijplank", en: "side bridge v. 2", groep: "Core",
+    id: "0705", media: "RKjH6Lt", naam: "Zijplank", en: "side bridge v. 2", groep: "Core",
     doelspier: "Schuine buikspieren", secundair: ["Schouders", "Billen"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Ga op je zij liggen en steun op je onderarm, elleboog onder je schouder.",
@@ -791,7 +796,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0464", naam: "Plank met draai", en: "front plank with twist", groep: "Core",
+    id: "0464", media: "CosupLu", naam: "Plank met draai", en: "front plank with twist", groep: "Core",
     doelspier: "Core & schuine buikspieren", secundair: ["Schouders"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Neem een plankpositie aan op je onderarmen, lichaam in een rechte lijn.",
@@ -800,7 +805,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "0407", naam: "Side bend (dumbbell)", en: "dumbbell side bend", groep: "Core",
+    id: "0407", media: "IpONWYv", naam: "Side bend (dumbbell)", en: "dumbbell side bend", groep: "Core",
     doelspier: "Schuine buikspieren", secundair: [], materiaal: ["dumbbells"],
     instructies: [
       "Sta rechtop met een dumbbell in één hand naast je lichaam.",
@@ -809,7 +814,7 @@ const OEFENINGEN = [
     ],
   },
   {
-    id: "3699", naam: "Shoulder taps", en: "shoulder tap", groep: "Core",
+    id: "3699", media: "yRpV5TC", naam: "Shoulder taps", en: "shoulder tap", groep: "Core",
     doelspier: "Core", secundair: ["Schouders"], materiaal: ["lichaam", "mat"],
     instructies: [
       "Neem een plankpositie aan op gestrekte armen, voeten iets uit elkaar.",

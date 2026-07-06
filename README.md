@@ -13,7 +13,7 @@ Een persoonlijke fitness-app (PWA) voor krachttraining thuis — volledig in het
 
 ## Functies
 
-- **Oefeningenbibliotheek** — 80 oefeningen in het Nederlands met stapsgewijze uitvoering en tips, te filteren op spiergroep en materiaal. Gecureerde en vertaalde selectie uit de [exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset) (1.324 oefeningen); alleen oefeningen die met bovenstaande setup kunnen.
+- **Oefeningenbibliotheek** — 80 oefeningen in het Nederlands met demonstratie-GIF, stapsgewijze uitvoering en tips, te filteren op spiergroep en materiaal. Gecureerde en vertaalde selectie uit de [exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset) (1.324 oefeningen); alleen oefeningen die met bovenstaande setup kunnen.
 - **Krachtschema's** — vijf kant-en-klare workouts gericht op kracht (5×5 Workout A/B, boven-/onderlichaam kracht + volume, snelle dumbbell full-body), inclusief rust- en progressie-advies.
 - **Training loggen** — start een schema of vrije training, log sets (gewicht × herhalingen) en bekijk je geschiedenis. Gegevens staan in `localStorage` van je browser.
 - **Progressie** — geschat 1RM-verloop per oefening (Epley-formule) in een grafiek, met records en totaalstatistieken.
@@ -54,3 +54,5 @@ Ga daarna naar `http://localhost:8000`. (Direct `index.html` openen werkt ook, a
 ## Bron
 
 Oefeningen gebaseerd op [hasaneyldrm/exercises-dataset](https://github.com/hasaneyldrm/exercises-dataset); de `id`'s in `js/data.js` verwijzen naar de oorspronkelijke dataset. Namen en instructies zijn naar het Nederlands vertaald en aangepast aan de thuissetup.
+
+De demonstratie-GIF's zijn **niet** in deze repository opgeslagen: de dataset-repo vermeldt eigendomsclaims op de media en heeft ze daarom zelf ook weggelaten. De app laadt ze tijdens gebruik rechtstreeks van de ExerciseDB-CDN (`static.exercisedb.dev`) via het `media`-veld per oefening; de service worker cachet elke bekeken GIF, waarna die offline beschikbaar blijft. Valt de CDN ooit weg, dan verbergt de app het beeld automatisch en blijven de tekstinstructies gewoon werken.
