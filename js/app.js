@@ -167,9 +167,13 @@
   function toonOefening(id, kanToevoegen) {
     const o = oefening(id);
     if (!o) return;
+    const gif = o.media
+      ? `<div class="gif-wrap"><img class="oefening-gif" src="${GIF_BASIS}${esc(o.media)}.gif" alt="Demonstratie: ${esc(o.naam)}"></div>`
+      : "";
     const modal = toonModal(`
       <h2>${esc(o.naam)}</h2>
       <div class="en-naam">${esc(o.en)}</div>
+      ${gif}
       <div>
         <span class="badge accent">${esc(o.doelspier)}</span>
         ${o.secundair.map((s) => `<span class="badge">${esc(s)}</span>`).join("")}
@@ -182,6 +186,14 @@
       ${o.tip ? `<div class="tip-blok"><strong>Tip:</strong> ${esc(o.tip)}</div>` : ""}
       ${kanToevoegen ? `<button class="knop" data-actie="toevoegen">+ Toevoegen aan training</button>` : ""}
     `);
+    const gifImg = $(".oefening-gif", modal);
+    if (gifImg) {
+      // geen beeld (offline en nog niet gecachet, of CDN weg)? Verberg het blok stilletjes.
+      gifImg.addEventListener("error", () => {
+        const wrap = gifImg.closest(".gif-wrap");
+        if (wrap) wrap.remove();
+      });
+    }
     if (kanToevoegen) {
       $("[data-actie=toevoegen]", modal).addEventListener("click", () => {
         voegOefeningToeAanWorkout(id);
