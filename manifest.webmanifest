@@ -1,0 +1,16 @@
+{
+  "name": "Thuis Kracht",
+  "short_name": "Thuis Kracht",
+  "description": "Persoonlijke fitness-app voor thuistraining: oefeningen, krachtschema's en workout-logboek, afgestemd op je eigen halterbank, stang en dumbbells.",
+  "lang": "nl",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#141413",
+  "theme_color": "#141413",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
